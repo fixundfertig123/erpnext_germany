@@ -22,6 +22,19 @@ def remove_custom_fields():
 						"fieldname": cf.get("fieldname"),
 					}
 				)
+	for doctypes, custom_fields in frappe.get_hooks("vat_id_no_custom_fields").items():
+		if isinstance(doctypes, str):
+			doctypes = (doctypes,)
+
+		for doctype in doctypes:
+			for cf in custom_fields:
+				frappe.db.delete(
+					"Custom Field",
+					{
+						"dt": doctype,
+						"fieldname": cf.get("fieldname"),
+					}
+				)
 
 
 def remove_property_setters():

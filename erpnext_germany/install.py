@@ -8,6 +8,8 @@ from frappe.custom.doctype.property_setter.property_setter import make_property_
 def after_install():
 	custom_fields = frappe.get_hooks("germany_custom_fields")
 	create_custom_fields(custom_fields)
+	vat_fields = frappe.get_hooks("vat_id_no_custom_fields")
+	create_custom_fields(vat_fields)
 	make_property_setters()
 	import_data()
 	insert_custom_records()

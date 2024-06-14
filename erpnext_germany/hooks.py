@@ -36,7 +36,11 @@ app_include_js = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {}
+doctype_js = {
+	"Company": "public/js/company.js",
+	"Supplier": "public/js/supplier.js",
+	"Customer": "public/js/customer.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -240,7 +244,41 @@ def get_register_fields(insert_after: str):
 			"options": "\n".join(REGISTER_COURTS),
 			"translatable": 0,
 		},
+		{
+			"fieldtype": "Column Break",
+			"fieldname": "vat_cb_1",
+			"insert_after": "register_court",
+		},
+		{
+			"fieldtype": "Data",
+			"fieldname": "vat_id_no",
+			"label": "VAT Number",
+			"insert_after": "vat_cb_1",
+			"translatable": 0,
+		},
 	]
+
+
+def get_vat_id_no_custom_fields(insert_after: str):
+	return [
+		{
+			"label": "VAT Number",
+			"fieldtype": "Data",
+			"fieldname": "vat_id_no",
+			"depends_on": insert_after.lower(),
+			"fetch_from": insert_after.lower() + ".vat_id_no",
+			"insert_after": insert_after.lower(),
+			"read_only": 1,
+			"translatable": 0,
+		},
+	]
+
+
+vat_id_no_custom_fields = {
+	("Sales Order", "Sales Invoice", "Delivery Note"): [] + get_vat_id_no_custom_fields(insert_after="customer"),
+	("Purchase Order", "Purchase Invoice"): [] + get_vat_id_no_custom_fields(insert_after="supplier"),
+	"Quotation": [] + get_vat_id_no_custom_fields(insert_after="party_name"),
+}
 
 
 germany_custom_fields = {
@@ -394,6 +432,16 @@ germany_custom_records = [
 		"parentfield": "links",
 		"parenttype": "Customize Form",
 		"group": "Vendor Evaluation",
+		"link_doctype": "VAT ID Check",
+		"link_fieldname": "party",
+		"custom": 1,
+	},
+	{
+		"doctype": "DocType Link",
+		"parent": "Company",
+		"parentfield": "links",
+		"parenttype": "Customize Form",
+		"group": "Company Evaluation",
 		"link_doctype": "VAT ID Check",
 		"link_fieldname": "party",
 		"custom": 1,
