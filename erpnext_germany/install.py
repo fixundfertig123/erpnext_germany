@@ -11,6 +11,8 @@ from .custom_fields import get_custom_fields
 
 def after_install():
 	create_custom_fields(get_custom_fields())
+	vat_fields = frappe.get_hooks("vat_id_no_custom_fields")
+	create_custom_fields(vat_fields)
 	make_property_setters()
 	import_data()
 	insert_custom_records()

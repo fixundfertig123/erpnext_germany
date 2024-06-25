@@ -48,6 +48,18 @@ def get_register_fields(insert_after: str):
 			"options": "\n".join([""] + REGISTER_COURTS),  # empty string to be able to select nothing
 			"translatable": 0,
 		},
+		{
+			"fieldtype": "Column Break",
+			"fieldname": "vat_cb_1",
+			"insert_after": "register_court",
+		},
+		{
+			"fieldtype": "Data",
+			"fieldname": "vat_id_no",
+			"label": "VAT Number",
+			"insert_after": "vat_cb_1",
+			"translatable": 0,
+		},
 	]
 
 
